@@ -1,0 +1,64 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Update system
+      dnf:
+        name: '*'
+        state: latest
+      become: yes
+
+    - name: Install GUI
+      dnf:
+        name: 
+          - sway
+          - swaylock
+          - swayidle
+          - waybar
+          - wofi
+          - fontawesome-fonts
+        state: latest
+      become: yes
+
+    - name: Add flathub
+      shell:
+        cmd: flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+      become: yes
+
+    - name: Install flatpak ansible module
+      shell:
+        cmd: ansible-galaxy collection install community.general
+
+    - name: Install telegram
+      community.general.flatpak:
+        name: org.telegram.desktop 
+        state: present
+
+    - name: Install slack
+      community.general.flatpak:
+        name: com.slack.Slack
+        state: present
+
+    - name: Install flatpak firefox
+      community.general.flatpak:
+        name: org.mozilla.firefox
+        state: present
+
+    - name: Install nix
+      shell:
+        cmd: curl -L https://nixos.org/nix/install | sh
+      become: yes
+
+    - name: Set sway config
+      copy:
+        src: .config/sway/config
+        dest: /{{ lookup('env', 'HOME')}}/.config/sway/config
+
+    - name: Set waybar config
+      copy:
+        src: .config/waybar/config
+        dest: /{{ lookup('env', 'HOME')}}/.config/waybar/config
+
+    - name: Set waybar css
+      copy:
+        src: .config/waybar/style.css
+        dest: /{{ lookup('env', 'HOME')}}/.config/waybar/style.css
