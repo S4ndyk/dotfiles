@@ -27,6 +27,7 @@
     - name: Install flatpak ansible module
       shell:
         cmd: ansible-galaxy collection install community.general
+        creates: /{{ lookup('env', 'HOME')}}/.ansible/collections/ansible_collections/community/general
 
     - name: Install telegram
       community.general.flatpak:
@@ -46,6 +47,7 @@
     - name: Install nix
       shell:
         cmd: curl -L https://nixos.org/nix/install | sh
+        creates: /nix
       become: yes
 
     - name: Set sway config
