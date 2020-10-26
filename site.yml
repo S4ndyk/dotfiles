@@ -50,17 +50,30 @@
         creates: /nix
       become: yes
 
+    - name: Add nix to profile.d
+      copy:
+        src: profile.d
+        dest: /etc/profile.d/nix.sh
+        mode: '444'
+      become: yes
+
     - name: Set sway config
       copy:
         src: .config/sway/config
         dest: /{{ lookup('env', 'HOME')}}/.config/sway/config
+        mode: '644'
+        force: yes
 
     - name: Set waybar config
       copy:
         src: .config/waybar/config
         dest: /{{ lookup('env', 'HOME')}}/.config/waybar/config
+        mode: '644'
+        force: yes
 
     - name: Set waybar css
       copy:
         src: .config/waybar/style.css
         dest: /{{ lookup('env', 'HOME')}}/.config/waybar/style.css
+        mode: '644'
+        force: yes
